@@ -1,0 +1,30 @@
+{
+  "name": "employee-cms",
+  "version": "1.0.0",
+  "description": "Employee CMS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jroller33/Employee-CMS.git"
+  },
+  "keywords": [
+    "CMS",
+    "node.js",
+    "inquirer",
+    "MySQL"
+  ],
+  "author": "John Roller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jroller33/Employee-CMS/issues"
+  },
+  "homepage": "https://github.com/jroller33/Employee-CMS#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}

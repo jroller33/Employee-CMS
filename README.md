@@ -2,6 +2,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ## Description
 ## 🚧Under development🚧
+[kanban link](https://github.com/users/jroller33/projects/4)
+
 ```
 GIVEN a command-line application that accepts user input
 WHEN I start the application

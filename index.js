@@ -1,6 +1,30 @@
 const inquirer = require("inquirer");
 // const Department = require("./lib/Department");
 
+addRoleQuestions = [
+    {
+        type: 'input',
+        name: 'roleName',
+        message: "What is the name of the role?",
+    },
+    {
+        type: 'input',
+        name: 'roleSalary',
+        message: "What is the salary of the role?",
+    },
+    {
+        type: 'input',
+        name: 'managerEmail',
+        message: "What is the manager's email address?",
+    },
+    {
+        type: 'input',
+        name: 'managerOffice',
+        message: "What is the manager's office number?",
+    }
+]
+
+
 function mainMenu() {
     inquirer.prompt({
         type: 'list',
@@ -30,24 +54,28 @@ function mainMenu() {
             mainMenu();
 
         } else if (response.menu === "Add Role") {
+            inquirer.prompt(addRoleQuestions).then(response => {
+                const roleName = response;
+                console.log(`Added ${roleName}`);
+            })
 
         } else if (response.menu === "View All Departments") {
             // print out table showing all departments (7 sec in video)
             mainMenu();
 
-        } else if (response.menu === "Add department") {        // working
+        } else if (response.menu === "Add department") {
             inquirer.prompt({
                 type: 'input',
                 name: 'addDept',
                 message: "What is the name of the department?",
             }).then(response => {
                 const deptName = response;
-                console.log(deptName);
+                console.log(`Added ${deptName} to database.`);
                 mainMenu();
             })
 
         } else if (response.menu === "Quit") {
-
+            console.log('bye');
         } else {
             console.log("error in mainMenu() if/else statements");
         }

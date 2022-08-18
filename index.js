@@ -1,7 +1,8 @@
 const inquirer = require("inquirer");
+// const Department = require("./lib/Department");
 
 function mainMenu() {
-    inquirer.createPromptModule({
+    inquirer.prompt({
         type: 'list',
         name: 'menu',
         message: "What would you like to do?",
@@ -34,12 +35,23 @@ function mainMenu() {
             // print out table showing all departments (7 sec in video)
             mainMenu();
 
-        } else if (response.menu === "Add department") {
-            
+        } else if (response.menu === "Add department") {        // working
+            inquirer.prompt({
+                type: 'input',
+                name: 'addDept',
+                message: "What is the name of the department?",
+            }).then(response => {
+                const deptName = response;
+                console.log(deptName);
+                mainMenu();
+            })
+
         } else if (response.menu === "Quit") {
 
         } else {
             console.log("error in mainMenu() if/else statements");
         }
-    })
-}
+    });
+};
+
+mainMenu();

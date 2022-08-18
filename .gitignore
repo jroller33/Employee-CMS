@@ -3,3 +3,6 @@ package-lock.json
 .vscode
 .DS_Store
 notes.txt
+.env
+notes.txt
+0

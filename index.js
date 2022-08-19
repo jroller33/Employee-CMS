@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 // const Department = require("./lib/Department");
 
-addRoleQuestions = [
+const addRoleQuestions = [
     {
         type: 'input',
         name: 'roleName',
@@ -13,16 +13,18 @@ addRoleQuestions = [
         message: "What is the salary of the role?",
     },
     {
-        type: 'input',
-        name: 'managerEmail',
-        message: "What is the manager's email address?",
+        type: 'list',
+        name: 'roleDept',
+        message: "Which department does the role belong to?",
+        choices: [
+            "Engineering",
+            "Finance",
+            "Legal",
+            "Sales",
+            "Service",
+        ],
     },
-    {
-        type: 'input',
-        name: 'managerOffice',
-        message: "What is the manager's office number?",
-    }
-]
+];
 
 
 function mainMenu() {
@@ -38,7 +40,7 @@ function mainMenu() {
             "Add Role",
             "View All Departments",
             "Add department",
-            "Quit"            
+            "Quit"
         ],
     }).then(response => {
         if (response.menu === "View All Employees") {
@@ -55,10 +57,12 @@ function mainMenu() {
 
         } else if (response.menu === "Add Role") {
             inquirer.prompt(addRoleQuestions).then(response => {
-                const roleName = response;
-                console.log(`Added ${roleName}`);
-            })
-
+                const roleName = response.roleName;
+                const roleSalary = response.roleSalary;
+                const roleDept = response.roleDept;
+                console.log(`added ${roleName}, ${roleSalary}, ${roleDept} to db`);
+                mainMenu();
+            });
         } else if (response.menu === "View All Departments") {
             // print out table showing all departments (7 sec in video)
             mainMenu();

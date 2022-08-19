@@ -47,7 +47,25 @@ const addEmployeeQuestions = [
         choices: [          
             // these managers need to come from db, not hardcoded.
         ],
-    }
+    },
+];
+const updateEmployeeQuestions = [
+    {
+        type: 'list',
+        name: 'employeeToUpdate',
+        message: "Which employee's role do you want to update?",
+        choices: [          
+            // these employees need to come from db, not hardcoded.
+        ],
+    },
+    {
+        type: 'list',
+        name: 'updateRole',
+        message: "Which role do you want to assign the selected employee?",
+        choices: [
+            // these roles need to come from db, not hardcoded.
+        ],
+    },
 ];
 
 function mainMenu() {
@@ -64,12 +82,17 @@ function mainMenu() {
             "View All Departments",
             "Add department",
             "Quit"
+            // Bonus:
+            // Update Employee Managers
+            // View employees by manager.
+            // - View employees by department
+            // - Delete departments, roles, and employees.
+            // - View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
         ],
     }).then(response => {
         if (response.menu === "View All Employees") {
             // print out table w all employees 21 sec
             mainMenu();
-
         } else if (response.menu === "Add Employee") {
             inquirer.prompt(addEmployeeQuestions).then(response => {
                 const employeeFirstName = response.employeeFirstName;
@@ -79,12 +102,17 @@ function mainMenu() {
 
                 // push these to db
                 console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
-
-
                 mainMenu();
             });
         } else if (response.menu === "Update Employee Role") {
+            inquirer.prompt(updateEmployeeQuestions).then(response => {
+                const employeeToUpdate = response.employeeToUpdate;
+                const updateRole = response.updateRole;
 
+                // push these to db
+                console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
+                mainMenu();
+            });
         } else if (response.menu === "View All Roles") {
             // print out table with all jobs, what dept it is and salary (14 sec)
             mainMenu();
@@ -111,7 +139,7 @@ function mainMenu() {
             }).then(response => {
                 const deptName = response;
                 console.log(`Added ${deptName} to database.`);
-                
+
                 // push to db
                 mainMenu();
             });

@@ -16,16 +16,39 @@ const addRoleQuestions = [
         type: 'list',
         name: 'roleDept',
         message: "Which department does the role belong to?",
-        choices: [
-            "Engineering",
-            "Finance",
-            "Legal",
-            "Sales",
-            "Service",
+        choices: [  // these depts need to come from db, not hardcoded.
+        
         ],
     },
 ];
-
+const addEmployeeQuestions = [
+    {
+        type: 'input',
+        name: 'employeeFirstName',
+        message: "What is the employee's first name?",
+    },
+    {
+        type: 'input',
+        name: 'employeeLastName',
+        message: "What is the employee's last name?",
+    },
+    {
+        type: 'list',
+        name: 'employeeRole',
+        message: "What is the employee's role?",
+        choices: [       
+            //  these roles need to come from db, not hardcoded.
+        ],
+    },
+    {
+        type: 'list',
+        name: 'employeeManager',
+        message: "Who is the employee's manager?",
+        choices: [          
+            // these managers need to come from db, not hardcoded.
+        ],
+    }
+];
 
 function mainMenu() {
     inquirer.prompt({
@@ -48,7 +71,18 @@ function mainMenu() {
             mainMenu();
 
         } else if (response.menu === "Add Employee") {
+            inquirer.prompt(addEmployeeQuestions).then(response => {
+                const employeeFirstName = response.employeeFirstName;
+                const employeeLastName = response.employeeLastName;
+                const employeeRole = response.employeeRole;
+                const employeeManager = response.employeeManager;
 
+                // push these to db
+                console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
+
+
+                mainMenu();
+            });
         } else if (response.menu === "Update Employee Role") {
 
         } else if (response.menu === "View All Roles") {
@@ -60,6 +94,8 @@ function mainMenu() {
                 const roleName = response.roleName;
                 const roleSalary = response.roleSalary;
                 const roleDept = response.roleDept;
+
+                // push these to db
                 console.log(`added ${roleName}, ${roleSalary}, ${roleDept} to db`);
                 mainMenu();
             });
@@ -75,9 +111,10 @@ function mainMenu() {
             }).then(response => {
                 const deptName = response;
                 console.log(`Added ${deptName} to database.`);
+                
+                // push to db
                 mainMenu();
-            })
-
+            });
         } else if (response.menu === "Quit") {
             console.log('bye');
         } else {

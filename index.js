@@ -74,13 +74,13 @@ function mainMenu() {
         name: 'menu',
         message: "What would you like to do?",
         choices: [
+            "View All Departments",
+            "View All Roles",
             "View All Employees",
+            "Add a department",
+            "Add a role",
             "Add Employee",
             "Update Employee Role",
-            "View All Roles",
-            "Add Role",
-            "View All Departments",
-            "Add department",
             "Quit"
             // Bonus:
             // Update Employee Managers

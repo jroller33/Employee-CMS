@@ -91,8 +91,12 @@ function mainMenu() {
         ],
     }).then(response => {
         if (response.menu === "View All Employees") {
+
             // print out table w all employees 21 sec
             mainMenu();
+        } else if (response.menu === "View All Departments") {
+            // print out table showing all departments (7 sec in video)
+            mainMenu();    
         } else if (response.menu === "Add Employee") {
             inquirer.prompt(addEmployeeQuestions).then(response => {
                 const employeeFirstName = response.employeeFirstName;
@@ -127,9 +131,7 @@ function mainMenu() {
                 console.log(`added ${roleName}, ${roleSalary}, ${roleDept} to db`);
                 mainMenu();
             });
-        } else if (response.menu === "View All Departments") {
-            // print out table showing all departments (7 sec in video)
-            mainMenu();
+
 
         } else if (response.menu === "Add department") {
             inquirer.prompt({

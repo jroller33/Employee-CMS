@@ -5,21 +5,32 @@ CREATE DATABASE cms_db;
 USE cms_db;
 
 CREATE TABLE department (
-    id INT,         -- department_id in role table
+    id INT,                    -- primary key, foreign key: role(department_id)
     name VARCHAR(30)   
 );
 
 CREATE TABLE role (
-    id INT,         -- role_id in employee table
+    id INT,                      -- Primary key, foreign key: employee(role_id)
     title VARCHAR(30),
     salary DECIMAL,
-    department_id INT
+    department_id INT,              -- foreign key, primary department(id)
+    FOREIGN KEY (department_id) REFERENCES (department(id)),
+    ON DELETE SET NULL              -- IS THIS NEEDED???
 );
 
 CREATE TABLE employee (
-    id INT, -- ??? in employee table manager_id is linked to id
+    id INT,                 -- primary key, foreign key: employee(manager_id)
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     role_id INT,
-    manager_id INT  -- ??? in employee table manager_id is linked to id
+    FOREIGN KEY (role_id) REFERENCES (role(id)),
+    ON DELETE SET NULL,      -- IS THIS NEEDED???
+    manager_id INT,
+    FOREIGN KEY (manager_id) REFERENCES (employee(id)),
+    ON DELETE SET NULL          -- IS THIS NEEDED???
 );
+                 
+            -- manager_id: foreign key. primary: employee(id)
+            -- I think this is only if they don't have a manager_id, then 
+            -- it will reference the employee(id). if they do have a manager, then
+            -- this should be the manager's id.

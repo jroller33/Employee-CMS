@@ -2,7 +2,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ## Description
 ## 🚧Under development🚧
-[kanban link](https://github.com/users/jroller33/projects/4)
+[kanban link](https://github.com/users/jroller33/projects/4) 
+<br/>
+
 [assignment link](https://courses.bootcampspot.com/courses/1817/assignments/29396)
 ```
 

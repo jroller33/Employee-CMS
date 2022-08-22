@@ -1,5 +1,25 @@
 const inquirer = require("inquirer");
+const mysql = require('mysql2');
 // const Department = require("./lib/Department");
+
+
+const db = mysql.createConnection(
+  {
+    host: 'localhost',      
+    user: 'root',
+    password: 'mysqlPass',  // put in .env
+    database: 'cms_db'
+  },
+  console.log(`Connected to the cms_db database.`)
+);
+
+db.query(
+    'SELECT * FROM role;',
+    function(err, results, fields) {
+      console.log(results); // results contains rows returned by server
+    //   console.log(fields); // fields contains extra meta data about results, if available
+    }
+  );
 
 const addRoleQuestions = [
     {
@@ -90,48 +110,29 @@ function mainMenu() {
             // - View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
         ],
     }).then(response => {
-        if (response.menu === "View All Employees") {
-
-            // print out table w all employees 21 sec
-            mainMenu();
-        } else if (response.menu === "View All Departments") {
+        if (response.menu === "View All Departments") {
             // print out table showing all departments (7 sec in video)
-            mainMenu();    
-        } else if (response.menu === "Add Employee") {
-            inquirer.prompt(addEmployeeQuestions).then(response => {
-                const employeeFirstName = response.employeeFirstName;
-                const employeeLastName = response.employeeLastName;
-                const employeeRole = response.employeeRole;
-                const employeeManager = response.employeeManager;
+            // db.query
 
-                // push these to db
-                console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
-                mainMenu();
-            });
-        } else if (response.menu === "Update Employee Role") {
-            inquirer.prompt(updateEmployeeQuestions).then(response => {
-                const employeeToUpdate = response.employeeToUpdate;
-                const updateRole = response.updateRole;
 
-                // push these to db
-                console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
-                mainMenu();
-            });
+
+
+            // let deletedRow;
+// db.query(`DELETE FROM favorite_books WHERE id = ?`, deletedRow, (err, result) => {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log(result);
+// });
+            mainMenu();
+
         } else if (response.menu === "View All Roles") {
             // print out table with all jobs, what dept it is and salary (14 sec)
             mainMenu();
 
-        } else if (response.menu === "Add Role") {
-            inquirer.prompt(addRoleQuestions).then(response => {
-                const roleName = response.roleName;
-                const roleSalary = response.roleSalary;
-                const roleDept = response.roleDept;
-
-                // push these to db
-                console.log(`added ${roleName}, ${roleSalary}, ${roleDept} to db`);
-                mainMenu();
-            });
-
+        } else if (response.menu === "View All Employees") {
+            // print out table w all employees 21 sec
+            mainMenu();    
 
         } else if (response.menu === "Add department") {
             inquirer.prompt({
@@ -145,6 +146,40 @@ function mainMenu() {
                 // push to db
                 mainMenu();
             });
+
+        } else if (response.menu === "Add Role") {
+            inquirer.prompt(addRoleQuestions).then(response => {
+                const roleName = response.roleName;
+                const roleSalary = response.roleSalary;
+                const roleDept = response.roleDept;
+
+                // push these to db
+                console.log(`added ${roleName}, ${roleSalary}, ${roleDept} to db`);
+                mainMenu();
+            });
+
+        } else if (response.menu === "Add Employee") {
+            inquirer.prompt(addEmployeeQuestions).then(response => {
+                const employeeFirstName = response.employeeFirstName;
+                const employeeLastName = response.employeeLastName;
+                const employeeRole = response.employeeRole;
+                const employeeManager = response.employeeManager;
+
+                // push these to db
+                console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
+                mainMenu();
+            });
+
+        } else if (response.menu === "Update Employee Role") {
+            inquirer.prompt(updateEmployeeQuestions).then(response => {
+                const employeeToUpdate = response.employeeToUpdate;
+                const updateRole = response.updateRole;
+
+                // push these to db
+                console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
+                mainMenu();
+            });
+
         } else if (response.menu === "Quit") {
             console.log('bye');
         } else {

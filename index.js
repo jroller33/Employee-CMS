@@ -1,16 +1,5 @@
 const inquirer = require("inquirer");
-const mysql = require('mysql2');
-// const Department = require("./lib/Department");
 
-const db = mysql.createConnection(
-  {
-    host: 'localhost',
-    user: 'root',
-    password: 'mysqlPass',  // put in .env
-    database: 'cms_db'
-  },
-  console.log(`Connected to the cms_db database.`)
-);
 const addRoleQuestions = [
     {
         type: 'input',
@@ -28,8 +17,8 @@ const addRoleQuestions = [
         message: "Which department does the role belong to?",
         choices: [  // these depts need to come from db, not hardcoded.
         
-        ],
-    },
+    ],
+},
 ];
 const addEmployeeQuestions = [
     {
@@ -77,7 +66,14 @@ const updateEmployeeQuestions = [
         ],
     },
 ];
-
+async function queryDb(query) {
+    // get the client
+    const mysql = require('mysql2/promise');
+    // create the connection
+    const db = await mysql.createConnection({host:'localhost', user: 'root', password: 'mysqlPass', database: 'test'});
+    const result = await db.query(query);
+    return result;
+}
 function mainMenu() {
     inquirer.prompt({
         type: 'list',
@@ -101,18 +97,23 @@ function mainMenu() {
         ],
     }).then(response => {
         if (response.menu === "View All Departments") {
-            db.query(
-                'SELECT * FROM department;',
-                function(err, results) {
-                    console.log(results); // results contains rows returned by server
+            const query = `SELECT * FROM department;`;
+            queryDb(query, (err, rows) => {
+                if (err) {
+                    res.status(500).json({ error: err.message });
+                    return;
                 }
-            );
+                res.json({
+                    message: 'success',
+                    data: rows
+                });
+            });
+            mainMenu()
 
         } else if (response.menu === "View All Roles") {
+           
             // print out table with all jobs, what dept it is and salary (14 sec)
             // db.query(
-            
-            //     )
             mainMenu();
 
         } else if (response.menu === "View All Employees") {

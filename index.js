@@ -14,11 +14,11 @@ const db = mysql.createConnection(
 );
 
 db.query(
-    'INSERT INTO role (id, title, salary, department_id) VALUES (4, "hi", 44444, 4);',
-    function(err, results, fields) {
-      console.log(results); // results contains rows returned by server
-    //   console.log(fields); // fields contains extra meta data about results, if available
-    }
+    'INSERT INTO role (id, title, salary, department_id) VALUES (5, "hiii", 44445, 5);',
+    // function(err, results) {
+    //   console.log(results); // results contains rows returned by server
+    // //   console.log(fields); // fields contains extra meta data about results, if available
+    // }
   );
 
 //   db.query('SELECT SUM(quantity) AS total_in_section, MAX(quantity) AS max_quantity, MIN(quantity) AS min_quantity, AVG(quantity) AS avg_quantity FROM favorite_books GROUP BY section', function (err, results) {

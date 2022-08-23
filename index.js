@@ -144,7 +144,7 @@ async function addRole() {
             } else if (response.menu === "Add a department") {
                 addDepartment();
             } else if (response.menu === "Add a role") {
-
+                addRole();
 
 
             } else if (response.menu === "Add Employee") {

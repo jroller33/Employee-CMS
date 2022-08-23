@@ -91,7 +91,7 @@ function mainMenu() {
             "Add a role",
             "Add Employee",
             "Update Employee Role",
-            "Quit"
+            "Quit",
             // Bonus:
             // Update Employee Managers
             // View employees by manager.
@@ -101,19 +101,18 @@ function mainMenu() {
         ],
     }).then(response => {
         if (response.menu === "View All Departments") {
-            
-
-            // let deletedRow;
-// db.query(`DELETE FROM favorite_books WHERE id = ?`, deletedRow, (err, result) => {
-//   if (err) {
-//     console.log(err);
-//   }
-//   console.log(result);
-// });
-            mainMenu();
+            db.query(
+                'SELECT * FROM department;',
+                function(err, results) {
+                    console.log(results); // results contains rows returned by server
+                }
+            );
 
         } else if (response.menu === "View All Roles") {
             // print out table with all jobs, what dept it is and salary (14 sec)
+            // db.query(
+            
+            //     )
             mainMenu();
 
         } else if (response.menu === "View All Employees") {

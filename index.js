@@ -66,13 +66,13 @@ const updateEmployeeQuestions = [
         ],
     },
 ];
+
 async function queryDb(query) {
-    // get the client
+    
     const mysql = require('mysql2/promise');
-    // create the connection
-    const db = await mysql.createConnection({host:'localhost', user: 'root', password: 'mysqlPass', database: 'test'});
-    const result = await db.query(query);
-    return result;
+    const db = await mysql.createConnection({host:'localhost', user: 'root', password: 'mysqlPass', database: 'cms_db'});
+    const [rows, fields] = await db.query(query);
+    return [rows, fields];
 }
 function mainMenu() {
     inquirer.prompt({
@@ -97,18 +97,16 @@ function mainMenu() {
         ],
     }).then(response => {
         if (response.menu === "View All Departments") {
-            const query = `SELECT * FROM department;`;
+            const query = `SELECT * FROM departments;`;
             queryDb(query, (err, rows) => {
                 if (err) {
                     res.status(500).json({ error: err.message });
                     return;
+                } else {
+                console.log(rows);
                 }
-                res.json({
-                    message: 'success',
-                    data: rows
-                });
             });
-            mainMenu()
+            // mainMenu()
 
         } else if (response.menu === "View All Roles") {
            

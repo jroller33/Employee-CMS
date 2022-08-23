@@ -3,7 +3,7 @@ VALUES (1, "t1", 10000, 3),
        (2, "t2", 50000, 2),
        (3, "t3", 88000, 1);
 
-INSERT INTO department (id, names)
+INSERT INTO departments (id, names)
 VALUES (1, "Legal"),
        (2, "Accounting"),
        (3, "Sales"); 

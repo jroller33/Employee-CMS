@@ -82,7 +82,7 @@ async function addDepartment() {
     });
 }
 async function addRole() {
-    const departments = await query (`SELECT names as name , id as value from departments`)     // 'name' is refering to 'name: roleName' and 'value' refs 'choices: departments'  
+    const departments = await query (`SELECT names as name , id as value from departments`)     // 'name' is referring to 'name: roleName' and 'value' refs 'choices: departments'  
     const addRoleQuestions = [
         {
             type: 'input',

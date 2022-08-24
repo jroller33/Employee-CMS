@@ -5,35 +5,46 @@ require('console.table');
 const db = mysql.createConnection({ host: 'localhost', user: 'root', password: 'mysqlPass', database: 'cms_db' });
 const query = util.promisify(db.query).bind(db);
 
+async function addEmployee() {
+    const managers =  await query (`SELECT names as name , id as value from departments`); // TO DO: change queries
+    const roles =  await query (`SELECT names as name , id as value from departments`);
+    
+    const addEmployeeQuestions = [
+        {
+            type: 'input',
+            name: 'employeeFirstName',
+            message: "What is the employee's first name?",
+        },
+        {
+            type: 'input',
+            name: 'employeeLastName',
+            message: "What is the employee's last name?",
+        },
+        {
+            type: 'list',
+            name: 'employeeRole',
+            message: "What is the employee's role?",
+            choices: roles
+        },
+        {
+            type: 'list',
+            name: 'employeeManager',
+            message: "Who is the employee's manager?",
+            choices: managers
+        },
+    ];
+    inquirer.prompt(addEmployeeQuestions).then(response => {
+        const employeeFirstName = response.employeeFirstName;
+        const employeeLastName = response.employeeLastName;
+        const employeeRole = response.employeeRole;
+        const employeeManager = response.employeeManager;
 
-const addEmployeeQuestions = [
-    {
-        type: 'input',
-        name: 'employeeFirstName',
-        message: "What is the employee's first name?",
-    },
-    {
-        type: 'input',
-        name: 'employeeLastName',
-        message: "What is the employee's last name?",
-    },
-    {
-        type: 'list',
-        name: 'employeeRole',
-        message: "What is the employee's role?",
-        choices: [
-            //  these roles need to come from db, not hardcoded.
-        ],
-    },
-    {
-        type: 'list',
-        name: 'employeeManager',
-        message: "Who is the employee's manager?",
-        choices: [
-            // these managers need to come from db, not hardcoded.
-        ],
-    },
-];
+        // push these to db
+        console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
+        mainMenu();
+    });
+};
+
 const updateEmployeeQuestions = [
     {
         type: 'list',
@@ -57,19 +68,19 @@ async function viewDepts() {
     const departments = await query(str);
     console.table(departments);
     mainMenu();
-}
+};
 async function viewRoles() {
     const str = `SELECT * FROM roles;`;
     const roles = await query(str);
     console.table(roles);
     mainMenu();
-}
+};
 async function viewEmployees() {
     const str = `SELECT * FROM employee`;
     const employees = await query(str);
     console.table(employees);
     mainMenu();
-}
+};
 async function addDepartment() {
     inquirer.prompt({
         type: 'input',
@@ -80,9 +91,9 @@ async function addDepartment() {
         const departments = await query(str, [response.addDept]);
         viewDepts();
     });
-}
+};
 async function addRole() {
-    const departments = await query (`SELECT names as name , id as value from departments`)     // 'name' is referring to 'name: roleName' and 'value' refs 'choices: departments'  
+    const departments = await query (`SELECT names as name , id as value from departments`);     // 'name' is referring to 'name: roleName' and 'value' refs 'choices: departments'  
     const addRoleQuestions = [
         {
             type: 'input',
@@ -112,7 +123,6 @@ async function addRole() {
 
     });
 };
-
     function mainMenu() {
         inquirer.prompt({
             type: 'list',
@@ -124,7 +134,7 @@ async function addRole() {
                 "View All Employees",
                 "Add a department",
                 "Add a role",
-                "Add Employee",
+                "Add an employee",
                 "Update Employee Role",
                 "Quit",
                 // Bonus:
@@ -145,19 +155,8 @@ async function addRole() {
                 addDepartment();
             } else if (response.menu === "Add a role") {
                 addRole();
-
-
-            } else if (response.menu === "Add Employee") {
-                inquirer.prompt(addEmployeeQuestions).then(response => {
-                    const employeeFirstName = response.employeeFirstName;
-                    const employeeLastName = response.employeeLastName;
-                    const employeeRole = response.employeeRole;
-                    const employeeManager = response.employeeManager;
-
-                    // push these to db
-                    console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
-                    mainMenu();
-                });
+            } else if (response.menu === "Add an employee") {
+                addEmployee();
 
             } else if (response.menu === "Update Employee Role") {
                 inquirer.prompt(updateEmployeeQuestions).then(response => {

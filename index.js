@@ -33,13 +33,13 @@ async function addEmployee() {
             choices: managers
         },
     ];
-    inquirer.prompt(addEmployeeQuestions).then(response => {
+    inquirer.prompt(addEmployeeQuestions).then(async response => {
         const employeeFirstName = response.employeeFirstName;
         const employeeLastName = response.employeeLastName;
         const employeeRole = response.employeeRole;
         const employeeManager = response.employeeManager;
 
-        // push these to db
+
         console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
         mainMenu();
     });

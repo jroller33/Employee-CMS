@@ -6,42 +6,49 @@ const db = mysql.createConnection({ host: 'localhost', user: 'root', password: '
 const query = util.promisify(db.query).bind(db);
 
 async function addEmployee() {
-    const managers =  await query (`SELECT names as name , id as value from departments`); // TO DO: change queries
-    const roles =  await query (`SELECT names as name , id as value from departments`);
-    
+    const getManagers = await query(`SELECT * FROM employee WHERE manager_id IS NULL`);
+    const managers = getManagers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
+    managers.push({ name: "None" });
+    const roles = await query(`SELECT title as name , id as value from roles`);
     const addEmployeeQuestions = [
         {
             type: 'input',
-            name: 'employeeFirstName',
+            name: 'first_name',
             message: "What is the employee's first name?",
         },
         {
             type: 'input',
-            name: 'employeeLastName',
+            name: 'last_name',
             message: "What is the employee's last name?",
         },
         {
             type: 'list',
-            name: 'employeeRole',
+            name: 'role_id',
             message: "What is the employee's role?",
             choices: roles
         },
         {
             type: 'list',
-            name: 'employeeManager',
+            name: 'manager_id',
             message: "Who is the employee's manager?",
             choices: managers
         },
     ];
     inquirer.prompt(addEmployeeQuestions).then(async response => {
-        const employeeFirstName = response.employeeFirstName;
-        const employeeLastName = response.employeeLastName;
-        const employeeRole = response.employeeRole;
-        const employeeManager = response.employeeManager;
-
-
-        console.log(`added ${employeeFirstName}, ${employeeLastName}, ${employeeRole} ${employeeManager}to db`);
-        mainMenu();
+    const testManager = (response) => {
+        if (response.manager_id === "None") {
+            response.manager_id = null;
+        }
+    }
+    const employee = await query(`INSERT INTO employee SET ?`,
+        {
+            first_name: response.first_name,
+            last_name: response.last_name,
+            role_id: response.role_id,
+            manager_id: testManager(response)
+        })
+    // console.log(`employee added to db`);
+    viewEmployees();
     });
 };
 
@@ -93,7 +100,7 @@ async function addDepartment() {
     });
 };
 async function addRole() {
-    const departments = await query (`SELECT names as name , id as value from departments`);     // 'name' is referring to 'name: roleName' and 'value' refs 'choices: departments'  
+    const departments = await query(`SELECT names as name , id as value from departments`);     // 'name' is referring to 'name: roleName' and 'value' refs 'choices: departments'  
     const addRoleQuestions = [
         {
             type: 'input',
@@ -120,60 +127,60 @@ async function addRole() {
         const str = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`;
         const role = await query(str, [roleName, roleSalary, roleDept]);
         viewRoles();
-
     });
 };
-    function mainMenu() {
-        inquirer.prompt({
-            type: 'list',
-            name: 'menu',
-            message: "What would you like to do?",
-            choices: [
-                "View All Departments",
-                "View All Roles",
-                "View All Employees",
-                "Add a department",
-                "Add a role",
-                "Add an employee",
-                "Update Employee Role",
-                "Quit",
-                // Bonus:
-                // Update Employee Managers
-                // View employees by manager.
-                // - View employees by department
-                // - Delete departments, roles, and employees.
-                // - View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
-            ],
-        }).then(response => {
-            if (response.menu === "View All Departments") {
-                viewDepts();
-            } else if (response.menu === "View All Roles") {
-                viewRoles();
-            } else if (response.menu === "View All Employees") {
-                viewEmployees();
-            } else if (response.menu === "Add a department") {
-                addDepartment();
-            } else if (response.menu === "Add a role") {
-                addRole();
-            } else if (response.menu === "Add an employee") {
-                addEmployee();
+function mainMenu() {
+    inquirer.prompt({
+        type: 'list',
+        name: 'menu',
+        message: "What would you like to do?",
+        choices: [
+            "View All Departments",
+            "View All Roles",
+            "View All Employees",
+            "Add a department",
+            "Add a role",
+            "Add an employee",
+            "Update Employee Role",
+            "Quit",
+            // Bonus:
+            // Update Employee Managers
+            // View employees by manager.
+            // - View employees by department
+            // - Delete departments, roles, and employees.
+            // - View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
+        ],
+    }).then(response => {
+        if (response.menu === "View All Departments") {
+            viewDepts();
+        } else if (response.menu === "View All Roles") {
+            viewRoles();
+        } else if (response.menu === "View All Employees") {
+            viewEmployees();
+        } else if (response.menu === "Add a department") {
+            addDepartment();
+        } else if (response.menu === "Add a role") {
+            addRole();
+        } else if (response.menu === "Add an employee") {
+            addEmployee();
 
-            } else if (response.menu === "Update Employee Role") {
-                inquirer.prompt(updateEmployeeQuestions).then(response => {
-                    const employeeToUpdate = response.employeeToUpdate;
-                    const updateRole = response.updateRole;
+        } else if (response.menu === "Update Employee Role") {
+            inquirer.prompt(updateEmployeeQuestions).then(response => {
+                const employeeToUpdate = response.employeeToUpdate;
+                const updateRole = response.updateRole;
 
-                    // push these to db
-                    console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
-                    mainMenu();
-                });
+                // push these to db
+                console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
+                mainMenu();
+            });
 
-            } else if (response.menu === "Quit") {
-                console.log('bye');
-            } else {
-                console.log("error in mainMenu() if/else statements");
-            }
-        });
-    };
+        } else if (response.menu === "Quit") {
+            console.log('Bye');
+            process.exit(0);
+        } else {
+            console.log("error in mainMenu() if/else statements");
+        }
+    });
+};
 
 mainMenu();

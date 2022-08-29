@@ -52,24 +52,6 @@ async function addEmployee() {
     });
 };
 
-const updateEmployeeQuestions = [
-    {
-        type: 'list',
-        name: 'employeeToUpdate',
-        message: "Which employee's role do you want to update?",
-        choices: [
-            // these employees need to come from db, not hardcoded.
-        ],
-    },
-    {
-        type: 'list',
-        name: 'updateRole',
-        message: "Which role do you want to assign the selected employee?",
-        choices: [
-            // these roles need to come from db, not hardcoded.
-        ],
-    },
-];
 async function viewDepts() {
     const str = `SELECT * FROM departments;`;
     const departments = await query(str);
@@ -132,7 +114,7 @@ async function addRole() {
 async function updateEmployeeRole() {
     const roles = await query(`SELECT title as name , id as value from roles`);
     const employees = await query(`SELECT * FROM employee`);
-    
+
     inquirer.prompt({
         type: 'list',
         name: 'selectEmployee',
@@ -144,23 +126,14 @@ async function updateEmployeeRole() {
         name: 'updateRole',
         message: "Which role do you want to assign the selected employee?",
         choices: roles
-    }
-    
-    
-    );
+    });
 
-// },
-// {
-//     type: 'list',
-//     name: 'updateRole',
-//     message: "Which role do you want to assign the selected employee?",
-//     choices: [
-//         // these roles need to come from db, not hardcoded.
-//     ],
-// },
-
-    // SELECT * FROM employee
     viewEmployees();
+
+    // inquirer.prompt(updateEmployeeQuestions).then(response => {
+    //     const employeeToUpdate = response.employeeToUpdate;
+    //     const updateRole = response.updateRole;
+
 };
 
 function mainMenu() {
@@ -199,15 +172,10 @@ function mainMenu() {
             addEmployee();
 
         } else if (response.menu === "Update Employee Role") {
-            inquirer.prompt(updateEmployeeQuestions).then(response => {
-                const employeeToUpdate = response.employeeToUpdate;
-                const updateRole = response.updateRole;
-
                 updateEmployeeRole();
                 // push these to db
-                console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
-                mainMenu();
-            });
+                // console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
+                // mainMenu();
 
         } else if (response.menu === "Quit") {
             console.log('Bye');

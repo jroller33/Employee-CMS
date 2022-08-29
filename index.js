@@ -129,6 +129,40 @@ async function addRole() {
         viewRoles();
     });
 };
+async function updateEmployeeRole() {
+    const roles = await query(`SELECT title as name , id as value from roles`);
+    const employees = await query(`SELECT * FROM employee`);
+    
+    inquirer.prompt({
+        type: 'list',
+        name: 'selectEmployee',
+        message: 'Which employee do you want to update?',
+        choices: employees
+    },
+    {
+        type: 'list',
+        name: 'updateRole',
+        message: "Which role do you want to assign the selected employee?",
+        choices: roles
+    }
+    
+    
+    );
+
+// },
+// {
+//     type: 'list',
+//     name: 'updateRole',
+//     message: "Which role do you want to assign the selected employee?",
+//     choices: [
+//         // these roles need to come from db, not hardcoded.
+//     ],
+// },
+
+    // SELECT * FROM employee
+    viewEmployees();
+};
+
 function mainMenu() {
     inquirer.prompt({
         type: 'list',
@@ -169,6 +203,7 @@ function mainMenu() {
                 const employeeToUpdate = response.employeeToUpdate;
                 const updateRole = response.updateRole;
 
+                updateEmployeeRole();
                 // push these to db
                 console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
                 mainMenu();

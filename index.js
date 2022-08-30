@@ -5,52 +5,6 @@ require('console.table');
 const db = mysql.createConnection({ host: 'localhost', user: 'root', password: 'mysqlPass', database: 'cms_db' });
 const query = util.promisify(db.query).bind(db);
 
-async function addEmployee() {
-    const getManagers = await query(`SELECT * FROM employee WHERE manager_id IS NULL`);
-    const managers = getManagers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
-    managers.push({ name: "None" });
-    const roles = await query(`SELECT title as name , id as value from roles`);
-    const addEmployeeQuestions = [
-        {
-            type: 'input',
-            name: 'first_name',
-            message: "What is the employee's first name?",
-        },
-        {
-            type: 'input',
-            name: 'last_name',
-            message: "What is the employee's last name?",
-        },
-        {
-            type: 'list',
-            name: 'role_id',
-            message: "What is the employee's role?",
-            choices: roles
-        },
-        {
-            type: 'list',
-            name: 'manager_id',
-            message: "Who is the employee's manager?",
-            choices: managers
-        },
-    ];
-    inquirer.prompt(addEmployeeQuestions).then(async response => {
-    const testManager = (response) => {
-        if (response.manager_id === "None") {
-            response.manager_id = null;
-        }
-    }
-    const employee = await query(`INSERT INTO employee SET ?`,
-        {
-            first_name: response.first_name,
-            last_name: response.last_name,
-            role_id: response.role_id,
-            manager_id: testManager(response)
-        })
-    // console.log(`employee added to db`);
-    viewEmployees();
-    });
-};
 
 async function viewDepts() {
     const str = `SELECT * FROM departments;`;
@@ -111,22 +65,77 @@ async function addRole() {
         viewRoles();
     });
 };
-async function updateEmployeeRole() {
+async function addEmployee() {
+    const getManagers = await query(`SELECT * FROM employee WHERE manager_id IS NULL`);
+    const managers = getManagers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
+    managers.push({ name: "None" });
     const roles = await query(`SELECT title as name , id as value from roles`);
-    const employees = await query(`SELECT * FROM employee`);
-
-    inquirer.prompt({
-        type: 'list',
-        name: 'selectEmployee',
-        message: 'Which employee do you want to update?',
-        choices: employees
-    },
-    {
-        type: 'list',
-        name: 'updateRole',
-        message: "Which role do you want to assign the selected employee?",
-        choices: roles
+    const addEmployeeQuestions = [
+        {
+            type: 'input',
+            name: 'first_name',
+            message: "What is the employee's first name?",
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: "What is the employee's last name?",
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            message: "What is the employee's role?",
+            choices: roles
+        },
+        {
+            type: 'list',
+            name: 'manager_id',
+            message: "Who is the employee's manager?",
+            choices: managers
+        },
+    ];
+    inquirer.prompt(addEmployeeQuestions).then(async response => {
+        const testManager = (response) => {
+            if (response.manager_id === "None") {
+                response.manager_id = null;
+            }
+        }
+        const employee = await query(`INSERT INTO employee SET ?`,
+            {
+                first_name: response.first_name,
+                last_name: response.last_name,
+                role_id: response.role_id,
+                manager_id: testManager(response)
+            }
+        )
+        // console.log(`employee added to db`);
+        viewEmployees();
     });
+};
+async function updateEmployeeRole() {
+    const employees = await query(`SELECT * FROM employee`);
+    const roles = await query(`SELECT title as name , id as value from roles`);
+    const updateEmployeeQuestions = [
+        {
+            type: 'list',
+            name: 'selectEmployee',
+            message: 'Which employee do you want to update?',
+            choices: employees
+        },
+        {
+            type: 'list',
+            name: 'updateRole',
+            message: "Which role do you want to assign the selected employee?",
+            choices: roles
+        }
+    ];
+    inquirer.prompt(updateEmployeeQuestions).then(async response => {
+        const selectEmployee = response.selectEmployee;
+        const updateRole = response.updateRole;
+
+
+        const str = ` `;
+    })
 
     viewEmployees();
 
@@ -135,7 +144,6 @@ async function updateEmployeeRole() {
     //     const updateRole = response.updateRole;
 
 };
-
 function mainMenu() {
     inquirer.prompt({
         type: 'list',
@@ -172,10 +180,10 @@ function mainMenu() {
             addEmployee();
 
         } else if (response.menu === "Update Employee Role") {
-                updateEmployeeRole();
-                // push these to db
-                // console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
-                // mainMenu();
+            updateEmployeeRole();
+            // push these to db
+            // console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
+            // mainMenu();
 
         } else if (response.menu === "Quit") {
             console.log('Bye');
@@ -185,5 +193,4 @@ function mainMenu() {
         }
     });
 };
-
 mainMenu();

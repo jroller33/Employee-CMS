@@ -5,7 +5,6 @@ require('console.table');
 const db = mysql.createConnection({ host: 'localhost', user: 'root', password: 'mysqlPass', database: 'cms_db' });
 const query = util.promisify(db.query).bind(db);
 
-
 async function viewDepts() {
     const str = `SELECT * FROM departments;`;
     const departments = await query(str);
@@ -118,31 +117,30 @@ async function updateEmployeeRole() {
     const updateEmployeeQuestions = [
         {
             type: 'list',
-            name: 'selectEmployee',
+            name: 'employee_id',
+            choices: employees.map(employee => ({ name: employee.first_name + " " + employee.last_name, value: employee.id })),
             message: 'Which employee do you want to update?',
-            choices: employees
         },
         {
             type: 'list',
-            name: 'updateRole',
-            message: "Which role do you want to assign the selected employee?",
-            choices: roles
+            name: 'role_id',
+            choices: roles,
+            message: "What is the employee's new role?"
         }
     ];
     inquirer.prompt(updateEmployeeQuestions).then(async response => {
-        const selectEmployee = response.selectEmployee;
-        const updateRole = response.updateRole;
-
-
-        const str = ` `;
-    })
-
-    viewEmployees();
-
-    // inquirer.prompt(updateEmployeeQuestions).then(response => {
-    //     const employeeToUpdate = response.employeeToUpdate;
-    //     const updateRole = response.updateRole;
-
+        const updatedEmployee = await query(`UPDATE cms_db.employee SET ? WHERE ?`,
+            [
+                {
+                    role_id: response.role_id,
+                },
+                {
+                    id: response.employee_id,
+                }
+            ],
+        );
+        viewEmployees();
+    });
 };
 function mainMenu() {
     inquirer.prompt({

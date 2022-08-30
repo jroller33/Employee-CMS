@@ -6,20 +6,20 @@ const db = mysql.createConnection({ host: 'localhost', user: 'root', password: '
 const query = util.promisify(db.query).bind(db);
 
 async function viewDepts() {
-    const str = `SELECT * FROM departments;`;
-    const departments = await query(str);
+    const departments = await query(`SELECT * FROM departments;`);
+    console.log('\n');
     console.table(departments);
     mainMenu();
 };
 async function viewRoles() {
-    const str = `SELECT * FROM roles;`;
-    const roles = await query(str);
+    const roles = await query(`SELECT * FROM roles;`);
+    console.log('\n');
     console.table(roles);
     mainMenu();
 };
 async function viewEmployees() {
-    const str = `SELECT * FROM employee`;
-    const employees = await query(str);
+    const employees = await query(`SELECT * FROM employee;`);
+    console.log('\n');
     console.table(employees);
     mainMenu();
 };
@@ -97,6 +97,8 @@ async function addEmployee() {
         const testManager = (response) => {
             if (response.manager_id === "None") {
                 response.manager_id = null;
+            } else {
+                return response.manager_id;
             }
         }
         const employee = await query(`INSERT INTO employee SET ?`,
@@ -142,6 +144,31 @@ async function updateEmployeeRole() {
         viewEmployees();
     });
 };
+// async function totalUtilBudget() {
+//     const departments = await query(`SELECT names as name , id as value from departments`);
+//     inquirer.prompt({
+//         type: 'list',
+//         name: 'dept',
+//         message: "Which department?",
+//         choices: departments
+//     }).then(async response => {
+//         const dept = response.dept;
+//         // console.log(dept);
+//         const budget = await query(`SELECT 
+        
+//         `);
+//         console.log('\n');
+//         console.table(budget);
+//         mainMenu();
+//     })
+    // const budget = await query(`SELECT sum(salary) AS BUDGET FROM employee
+    // INNER JOIN roles
+    // ON employee.role_id = roles.id`);
+    // console.log('\n');
+    // console.table(budget);
+    // mainMenu();
+// }
+
 function mainMenu() {
     inquirer.prompt({
         type: 'list',
@@ -151,19 +178,16 @@ function mainMenu() {
             "View All Departments",
             "View All Roles",
             "View All Employees",
-            "Add a department",
-            "Add a role",
-            "Add an employee",
-            "Update Employee Role",
-            "Quit",
-            "Update Employee Managers",
-            "View employees by manager",
-            "View employees by department",
-            "Delete departments",
-            "Delete roles",
-            "Delete employees",
-            "View a deparment's total utilized budget"
-            // View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
+            "Add a Department",
+            "Add a Role",
+            "Add an Employee",
+            "Update an Employee's Role",
+            // "Delete a Department",
+            // "Delete a Role",
+            // "Delete an Employee",
+            // "View a Department's Total Utilized Budget",
+            "Clear Console",
+            "Quit"
         ],
     }).then(response => {
         if (response.menu === "View All Departments") {
@@ -172,19 +196,25 @@ function mainMenu() {
             viewRoles();
         } else if (response.menu === "View All Employees") {
             viewEmployees();
-        } else if (response.menu === "Add a department") {
+        } else if (response.menu === "Add a Department") {
             addDepartment();
-        } else if (response.menu === "Add a role") {
+        } else if (response.menu === "Add a Role") {
             addRole();
-        } else if (response.menu === "Add an employee") {
+        } else if (response.menu === "Add an Employee") {
             addEmployee();
-
-        } else if (response.menu === "Update Employee Role") {
+        } else if (response.menu === "Update an Employee's Role") {
             updateEmployeeRole();
-            // push these to db
-            // console.log(`added ${employeeToUpdate}, ${updateRole} to db`);
-            // mainMenu();
+        // } else if (response.menu === "Delete a Department") {
 
+        // } else if (response.menu === "Delete a Role") {
+
+        // } else if (response.menu === "Delete an Employee") {
+
+        // } else if (response.menu === "View a Department's Total Utilized Budget") {
+        //     totalUtilBudget();
+        } else if (response.menu === "Clear Console") {
+            console.clear();
+            mainMenu();
         } else if (response.menu === "Quit") {
             console.log('Bye');
             process.exit(0);

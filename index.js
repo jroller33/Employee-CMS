@@ -11,18 +11,21 @@ async function viewDepts() {
     console.table(departments);
     mainMenu();
 };
+
 async function viewRoles() {
     const roles = await query(`SELECT * FROM roles;`);
     console.log('\n');
     console.table(roles);
     mainMenu();
 };
+
 async function viewEmployees() {
     const employees = await query(`SELECT * FROM employee;`);
     console.log('\n');
     console.table(employees);
     mainMenu();
 };
+
 async function addDepartment() {
     inquirer.prompt({
         type: 'input',
@@ -34,6 +37,7 @@ async function addDepartment() {
         viewDepts();
     });
 };
+
 async function addRole() {
     const departments = await query(`SELECT names as name , id as value from departments`);     // 'name' is referring to 'name: roleName' and 'value' refs 'choices: departments'  
     const addRoleQuestions = [
@@ -64,6 +68,7 @@ async function addRole() {
         viewRoles();
     });
 };
+
 async function addEmployee() {
     const getManagers = await query(`SELECT * FROM employee WHERE manager_id IS NULL`);
     const managers = getManagers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
@@ -113,6 +118,7 @@ async function addEmployee() {
         viewEmployees();
     });
 };
+
 async function updateEmployeeRole() {
     const employees = await query(`SELECT * FROM employee`);
     const roles = await query(`SELECT title as name , id as value from roles`);
@@ -144,30 +150,6 @@ async function updateEmployeeRole() {
         viewEmployees();
     });
 };
-// async function totalUtilBudget() {
-//     const departments = await query(`SELECT names as name , id as value from departments`);
-//     inquirer.prompt({
-//         type: 'list',
-//         name: 'dept',
-//         message: "Which department?",
-//         choices: departments
-//     }).then(async response => {
-//         const dept = response.dept;
-//         // console.log(dept);
-//         const budget = await query(`SELECT 
-        
-//         `);
-//         console.log('\n');
-//         console.table(budget);
-//         mainMenu();
-//     })
-    // const budget = await query(`SELECT sum(salary) AS BUDGET FROM employee
-    // INNER JOIN roles
-    // ON employee.role_id = roles.id`);
-    // console.log('\n');
-    // console.table(budget);
-    // mainMenu();
-// }
 
 function mainMenu() {
     inquirer.prompt({
@@ -182,10 +164,6 @@ function mainMenu() {
             "Add a Role",
             "Add an Employee",
             "Update an Employee's Role",
-            // "Delete a Department",
-            // "Delete a Role",
-            // "Delete an Employee",
-            // "View a Department's Total Utilized Budget",
             "Clear Console",
             "Quit"
         ],
@@ -204,14 +182,6 @@ function mainMenu() {
             addEmployee();
         } else if (response.menu === "Update an Employee's Role") {
             updateEmployeeRole();
-        // } else if (response.menu === "Delete a Department") {
-
-        // } else if (response.menu === "Delete a Role") {
-
-        // } else if (response.menu === "Delete an Employee") {
-
-        // } else if (response.menu === "View a Department's Total Utilized Budget") {
-        //     totalUtilBudget();
         } else if (response.menu === "Clear Console") {
             console.clear();
             mainMenu();
@@ -223,4 +193,5 @@ function mainMenu() {
         }
     });
 };
+
 mainMenu();

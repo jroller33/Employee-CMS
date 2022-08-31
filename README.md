@@ -12,10 +12,13 @@ Employee Content Management System
 
 
 ## Usage
-node: `npm i`
-mysql: `SOURCE ./db/schema.sql`
-mysql: `SOURCE ./db/seed.sql`
-node: `node index.js`
+
+
+node: `npm i`   <br/>
+mysql: `SOURCE ./db/schema.sql`   <br/>
+mysql: `SOURCE ./db/seed.sql`   <br/>
+node: `node index.js`   <br/>
+
 ## Screenshots
 ![screenshot](./screenshots/screenshot.png)
 
